@@ -1,0 +1,8 @@
+var string = hello
+var a = 0
+:top
+if a = 5:kill
+print (char a string)
+set a = (add a 1)
+goto top
+:kill

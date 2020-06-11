@@ -1,0 +1,11 @@
+var beers = 99
+:top
+if beers = 1:kill3
+print (beers) bottles of beer on the wall
+print (beers) bottles of beer
+print Take one down, pass it around
+set beers = (add beers -1)
+print (beers) bottles of beer on the wall
+goto top
+:kill3
+print No more bottles of beer on the wall
