@@ -1,9 +1,9 @@
 #define COMMANDS 7
-#define STRING_LENGTH 50
+#define STRING_LENGTH 150
 
 struct StringPart {
 	int type;
-	char string[20];
+	char string[STRING_LENGTH];
 };
 
 struct Command {
@@ -24,13 +24,13 @@ struct Memory {
 	struct Variable {
 		char name[20];
 		char value[20];
-	}variables[20];
+	}variables[50];
 	int variablesAdded;
 
 	struct Label {
 		char name[20];
 		int line;
 		int lastUsed;
-	}labels[20];
+	}labels[50];
 	int labelsAdded;
 };

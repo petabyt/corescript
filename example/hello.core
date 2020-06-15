@@ -1,8 +1,24 @@
-var string = hello
-var a = 0
-:top
-if a = 5:kill
-print (char a string)
-set a = (add a 1)
-goto top
-:kill
+print Simple fibonacci
+goto fib
+
+goto killAll
+
+:fib
+var previous = 1
+var number = 0
+var temp = (blank)
+
+# Why does this cause error
+# the world may never know
+
+:top1
+if number = 144:kill1
+print (number)
+set temp = (add number previous)
+set previous = (number)
+set number = (temp)
+goto top1
+:kill1
+return fib
+
+:killAll

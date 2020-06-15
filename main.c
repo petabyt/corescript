@@ -16,17 +16,19 @@ void parseString(char *buffer, struct Command command, struct Memory memory) {
 			if (variable == -1) {
 				struct Command function;
 				parse(&memory, &function, command.strings[p].string, 0);
-
+				
+				
+				// See those beautiful 6 indent lines? Somehow at 2AM
+				// I decided they would be good.
 				int functionResult = 0;
 				int tryFunction = doCalculation(
 					memory,
 					&functionResult,
-					function.parts[0],
-					function.parts[1],
-					function.parts[2]
+					function.parts
 				);
-
-				// TODO: this belongs in a functions function.
+				
+				// Whoever decided that this was a good idea,
+				// is a fr- oh, that was me.
 				if (tryFunction  == -1) {
 					if (strcmp(function.parts[0], "char") == 0) {
 						int tryVariable = findVariable(memory, function.parts[2]);
@@ -83,14 +85,19 @@ int main() {
 		parse(&memory, &command[lines], buffer, lines);
 		lines++;
 	}
+	
+	// Don't leak memories
+	fclose(fileReader);
 
 	// The runner/executer is quite simple now
 	// we have an AST of all the code.
 	for (size_t l = 0; l < lines; l++) {
 		if (command[l].ignore == 1) {
-			continue;
+			// Sometimes I cannot tell whether I am insane,
+			// or if my computer is insane.
+			l++;
 		}
-
+		
 		if (strcmp(command[l].parts[0], "print") == 0) {
 			char string[STRING_LENGTH] = "";
 			parseString(string, command[l], memory);
@@ -110,10 +117,10 @@ int main() {
 			setVariable(&memory, command[l].parts[1], string);
 
 		} else if (strcmp(command[l].parts[0], "goto") == 0) {
-			l = gotoLabel(memory, command[l].parts[1], l, 0);
+			l = gotoLabel(memory, command[l].parts[1], l);
 
 		} else if (strcmp(command[l].parts[0], "return") == 0) {
-			l = gotoLabel(memory, command[l].parts[1], l, 1);
+			l = gotoLabelLastUsed(memory, command[l].parts[1], l) + 1; // Need to figure out where it did "l - 1"
 
 		} else if (strcmp(command[l].parts[0], "input") == 0) {
 			char string[STRING_LENGTH] = "";
@@ -136,37 +143,37 @@ int main() {
 			// Test the different operators "=", ">", "<"
 			int true = -1;
 			int variable = findVariable(memory, command[l].parts[1]);
+			//ERROR HANDLING!!!!
+			
 			if (command[l].parts[2][0] == '=') {
 				if (strcmp(memory.variables[variable].value, string) == 0) {
 					true = 1;
 				}
 			} else if (command[l].parts[2][0] == '>') {
-				int result = 1;
-				true = doCalculation(
-					memory,
-					&result,
-					"greater",
-					&memory.variables[variable].value[0],
-					string
-				);
-			} else if (command[l].parts[2][0] == '<') {
-				int result = 1;
-				true = doCalculation(
-					memory,
-					&result,
-					"lesser",
-					&memory.variables[variable].value[0],
-					string
-				);
+				int min = 0;
+				int tryMin = tryIntOrVariable(memory, &min, memory.variables[variable].value);
+				if (tryMin == -1) {
+					//ERROR HANDLING!!!!
+				}
+			
+				int max = 0;
+				int tryMax = tryIntOrVariable(memory, &max, string);
+				if (tryMax == -1) {
+					//ERROR HANDLING!!!!
+				}
+				
+				if (max > min) {
+					true = 1;
+				}
 			}
 
 			// Goto line if true
 			if (true == 1) {
-				l = gotoLabel(memory, label, l, 0);
+				l = gotoLabel(memory, label, l);
 			}
 
 		} else {
-			printf("Command error");
+			printf("Command error on line %d", l);
 		}
 	}
 
