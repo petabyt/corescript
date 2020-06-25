@@ -1,2 +1,2 @@
-gcc parser/parser.c interpreter/interpreter.c main.c -o main
+cc parser/parser.c interpreter/interpreter.c main.c -o main
 ./main
