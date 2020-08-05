@@ -1,0 +1,57 @@
+print Welcome to Corescript!
+print This is a simple example to get you started.
+
+print > Fibonacci Sequence:
+goto fib
+
+print > Count from 1-10:
+goto count
+
+print > Count from 1-10:
+goto beer
+
+goto kill
+
+:count
+var i = 0
+:countLoop
+	if i = 10:kill1
+	set i = [add i 1]
+	print [i]
+goto countLoop
+:kill1
+return count
+
+
+:fib
+var previous = 1
+var number = 0
+var temp = 0
+
+:fibLoop
+	if number = 144:kill2
+	print [number]
+	set temp = [add number previous]
+	set previous = [number]
+	set number = [temp]
+goto fibLoop
+print a
+:kill2
+return fib
+
+
+:beer
+var beers = 99
+:top
+	if beers = 90:kill3
+	print [beers] bottles of beer on the wall
+	print [beers] bottles of beer
+	print Take one down, pass it around
+	set beers = [add beers -1]
+	print [beers] bottles of beer on the wall
+goto top
+:kill3
+print Okay, you get the point...
+return beer
+
+:kill

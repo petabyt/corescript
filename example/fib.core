@@ -1,11 +1,11 @@
 var previous = 1
 var number = 0
-var temp = (blank)
+var temp = [blank]
 :fibLoop
-if number > 144:kill2
-print (number)
-set temp = (add number previous)
-set previous = (number)
-set number = (temp)
+if number = 144:kill
+print [number]
+set temp = [add number previous]
+set previous = [number]
+set number = [temp]
 goto fibLoop
-:kill2
+:kill
