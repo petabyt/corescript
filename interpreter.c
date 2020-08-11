@@ -96,7 +96,7 @@ int main(int argc, char *argv[]) {
 		usleep(DELAY);
 
 		// Make a simple pointer to the first part
-		// (just for it to loop better)
+		// (just for it to loop smaller)
 		void *first = &tree[l].parts[0].value;
 
 		if (!strcmp(first, core.command[0].first)) {
@@ -149,8 +149,7 @@ int main(int argc, char *argv[]) {
 				//printf("_%d_%s\n", tryLabel - 1, code[l]);
 				l = tryLabel;
 			}
-		} else if (!strcmp(first, core.command[4].first)) {
-			// if
+		} else if (!strcmp(first, core.command[4].first)) { // IF
 			char string[50];
 			memset(string, '\0', 50);
 			parseString(string, &tree[l], &memory);
@@ -171,6 +170,9 @@ int main(int argc, char *argv[]) {
 			if (error == -5) {
 				continue;
 			}
+			
+			//printf("---%d-%s-\n", tree[l].stringsLength, code[l]);
+			
 
 			if (error != 0) {
 				printf("%d %s%d\n", (l + 1), "Error parsing condition: ", error);

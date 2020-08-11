@@ -113,9 +113,9 @@ int findLabel(char *name, struct Memory *memory) {
 
 // Function for validating and setting goto
 int gotoLabel(char *name, int l, struct Memory *memory) {
-	//printf("---%s-%s\n", memory->labels[2].name, name);
 	int label = findLabel(name, memory);
-
+	//printf("---%s-%s-\n", memory->labels[1].name, name);
+	
 	if (label == -1) {
 		return label;
 	}
@@ -128,6 +128,7 @@ int gotoLabel(char *name, int l, struct Memory *memory) {
 
 // TODO: Use enum for errors
 int testCondition(int *error, char *operator, char *first, char *second, char l, struct Memory *memory) {
+	//printf("--%s\n", second);
 	int tryVar = getVariable(first, memory);
 	if (tryVar == -1) {
 		*error = -1;
@@ -144,6 +145,7 @@ int testCondition(int *error, char *operator, char *first, char *second, char l,
 
 	if (findColon == -1) {
 		*error = -2;
+		return 0;
 	}
 
 	// Point to string after the colon

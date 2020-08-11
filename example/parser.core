@@ -1,0 +1,25 @@
+var string = print Hello World
+var length = [len string]
+
+var char = [blank]
+var reading = [blank]
+var added = 0
+var c = 0
+
+:top
+	set char = [char string c]
+	set reading = [reading][char]
+	
+	if char = [space]:space
+	if c = [sub length 1]:space
+	
+	if c = [length]:stop
+	set c = [add c 1]
+goto top
+
+:space
+	print [reading]
+	set reading = [blank]
+return space
+
+:stop

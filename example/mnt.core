@@ -1,0 +1,24 @@
+var i = 9
+var w = 1
+:top
+	if i = 10:switch
+	if i = 1:switch
+	goto append
+	print [i]
+goto top
+
+:switch
+	if w = 1:setw0
+	set w = 1
+	return switch
+	:setw0
+	set w = 0
+return switch
+
+:append
+	if w = 1:addi0
+	set i = [add i 1]
+	return append
+	:addi0
+	set i = [sub i 1]
+return append
