@@ -1,5 +1,4 @@
 // Signed int to char[]
-
 int charToInt(char c) {
 	switch (c) {
 	case '0':

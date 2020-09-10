@@ -1,25 +1,17 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
 #include "parser/main.h"
 #include "parser/parser.h"
 #include "math/math.h"
 #include "runtime/runtime.h"
+#include "standard/main.h"
 
 // TODO: multiple files
 
 enum Runtime {
 	MAX_STRING_LENGTH = 50,
-	MAX_LINE_LENGTH = 100,
-	DELAY = 0
-};
-
-struct Error {
-	char *VARIABLE_NOT_FOUND;
-	char *COMMAND_NOT_FOUND;
-}errorsa = {
-	"Woah",
-	"asd"
+	MAX_LINE_LENGTH = 100
 };
 
 struct Lang core = {
@@ -36,30 +28,44 @@ struct Lang core = {
 
 int main(int argc, char *argv[]) {
 	if (argc == 1 || argv[1][0] == '?') {
-		printf("%s\n", "Corescript Interpreter v0.1.1");
+		puts("Corescript Interpreter v0.1.1\n");
 		return 0;
 	}
 
-	// Count file length
+	// This pointer is used twice, and is reset for
+	// the second reading
 	FILE *file = fopen(argv[1], "r");
+
+	if (file == NULL) {
+		puts("File reading error.");
+		return -1;
+	}
+
+	// Count file length
 	char temp[MAX_LINE_LENGTH];
 	int lineCount = 0;
 	while (fgets(temp, MAX_LINE_LENGTH, file) != NULL) {
 		lineCount++;
 	}
 
-	// Create str array with said line count
-	char code[lineCount][MAX_LINE_LENGTH];
+	fseek(file, 0, SEEK_SET);
 
-	// Store the
-	FILE *file2 = fopen(argv[1], "r");
+	// Allocate pointer to string array
+	char **code = malloc(lineCount * sizeof(char **));
+
+	// Store the program into the allocated array
 	char read[MAX_LINE_LENGTH];
 	int line = 0;
-	while (fgets(read, MAX_LINE_LENGTH, file2) != NULL) {
-		strtok(read, "\n");
+	while (fgets(read, MAX_LINE_LENGTH, file) != NULL) {
+		code[line] = malloc(MAX_LINE_LENGTH * sizeof(char));
+
+		strtok(read, "\n"); // remove trailing \n
 		strcpy(code[line], read);
+
 		line++;
 	}
+
+	fclose(file);
 
 	struct Memory memory;
 	memory.variablesLength = 0;
@@ -73,131 +79,42 @@ int main(int argc, char *argv[]) {
 	// excluding comments, labels
 	int linesParsed = 0;
 
-	// Test for things that won't be parsed
-	struct Tree tree[lineCount];
+	// Test for labels
+	struct Tree tree;
 	for (int l = 0; l < lineCount; l++) {
-		tree[l] = parse(&core, code[l], strlen(code[l]));
+		tree = parse(
+			&core,
+			code[l],
+			strlen(code[l])
+		);
 
-		// Check if parser detected label. (it sends
-		// it to the first part)
-		if (tree[l].ignore && tree[l].ignoreType == ':') {
-			memory.labels[memory.labelsLength].name = tree[l].parts[0].value;
+		// Store label if parser detected it
+		if (tree.ignore && tree.ignoreType == ':') {
+			strcpy(memory.labels[memory.labelsLength].name, tree.parts[0].value);
 			memory.labels[memory.labelsLength].line = l;
 			memory.labelsLength++;
 		}
 	}
 
 	for (int l = 0; l < lineCount; l++) {
-		if (tree[l].ignore == 1) {
+		tree = parse(
+			&core,
+			code[l],
+			strlen(code[l])
+		);
+
+		if (tree.ignore == 1) {
 			continue;
 		}
 
-		// Optional delay between parsing commands
-		usleep(DELAY);
-
-		// Make a simple pointer to the first part
-		// (just for it to loop smaller)
-		void *first = &tree[l].parts[0].value;
-
-		if (!strcmp(first, core.command[0].first)) {
-			// print
-			char string[50];
-			memset(string, '\0', 50);
-			parseString(string, &tree[l], &memory);
-
-			printf("%s\n", string);
-		} else if (!strcmp(first, core.command[1].first)) {
-			// var
-			char string[50];
-			memset(string, '\0', 50);
-			parseString(string, &tree[l], &memory);
-
-			createVariable(
-				tree[l].parts[1].value,
-				string,
-				&memory
-			);
-		} else if (!strcmp(first, core.command[2].first)) {
-			// set
-			char string[50];
-			memset(string, '\0', 50);
-			parseString(string, &tree[l], &memory);
-
-			setVariable(
-				tree[l].parts[1].value,
-				string,
-				&memory
-			);
-		} else if (!strcmp(first, core.command[3].first)) {
-			// goto
-			char string[50];
-			memset(string, '\0', 50);
-			parseString(string, &tree[l], &memory);
-
-			// Subtract one because the loop will move ahead
-			// after setting
-			int tryLabel = gotoLabel(
-				string,
-				l,
-				&memory
-			);
-
-			if (tryLabel == -1) {
-				printf("%s%d%s\n", "Line ", l + 1, ": Label not found");
-				return tryLabel;
-			} else {
-				//printf("_%d_%s\n", tryLabel - 1, code[l]);
-				l = tryLabel;
-			}
-		} else if (!strcmp(first, core.command[4].first)) { // IF
-			char string[50];
-			memset(string, '\0', 50);
-			parseString(string, &tree[l], &memory);
-
-			int error = 0;
-			int line = testCondition(
-				&error,
-				tree[l].parts[2].value,
-				tree[l].parts[1].value,
-				string,
-				l,
-				&memory
-			);
-
-			// Exit if error is -5, which means it is false,
-			// not really an error. There isn't much I can do without
-			// making it more complicated, so here you go.
-			if (error == -5) {
-				continue;
-			}
-			
-			//printf("---%d-%s-\n", tree[l].stringsLength, code[l]);
-			
-
-			if (error != 0) {
-				printf("%d %s%d\n", (l + 1), "Error parsing condition: ", error);
-				return error;
-			} else {
-				// Subtract one because the loop will move ahead
-				// after setting, same did with goto
-				l = line;
-			}
-		} else if (!strcmp(first, core.command[5].first)) { // RETURN
-			char string[50];
-			memset(string, '\0', 50);
-			parseString(string, &tree[l], &memory);
-
-			int tryLabel = findLabel(
-				string,
-				&memory
-			);
-
-			if (tryLabel == -1) {
-				printf("%s%d\n", "Label not Found: ", tryLabel);
-				return tryLabel;
-			} else {
-				l = memory.labels[tryLabel].lastUsed;
-			}
-		}
+		// Parse command directly from "standard library"
+		l = standard(
+			&memory,
+			&core,
+			&tree,
+			l
+		);
 	}
+	
+	free(code);
 }

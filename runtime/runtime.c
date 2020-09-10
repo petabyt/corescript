@@ -32,7 +32,7 @@ int createVariable(char *name, char *value, struct Memory *memory) {
 		return -1;
 	}
 
-	memory->variables[memory->variablesLength].name = name;
+	strcpy(memory->variables[memory->variablesLength].name, name);
 	strcpy(memory->variables[memory->variablesLength].value, value);
 	memory->variablesLength++;
 	return 0;
@@ -99,7 +99,6 @@ void parseString(char *buffer, struct Tree *tree, struct Memory *memory) {
 }
 
 int findLabel(char *name, struct Memory *memory) {
-
 	for (int l = 0; l < memory->labelsLength; l++) {
 		//printf("---%s-%s\n", memory->labels[l].name, name);
 		if (!strcmp(name, memory->labels[l].name)) {
@@ -115,7 +114,7 @@ int findLabel(char *name, struct Memory *memory) {
 int gotoLabel(char *name, int l, struct Memory *memory) {
 	int label = findLabel(name, memory);
 	//printf("---%s-%s-\n", memory->labels[1].name, name);
-	
+
 	if (label == -1) {
 		return label;
 	}
