@@ -23,6 +23,8 @@ int setVariable(char *name, char *value, struct Memory *memory) {
 	} else {
 		strcpy(memory->variables[findVar].value, value);
 	}
+
+	return 0;
 }
 
 int createVariable(char *name, char *value, struct Memory *memory) {
@@ -62,14 +64,11 @@ int parseIntOrVar(int *error, char *string, int length, struct Memory *memory) {
 	return result;
 }
 
-
-
 int parseRaw(char *buffer, char *string, struct Memory *memory) {
 	int findVar = getVariable(string, memory);
 	if (findVar == -1) {
 		memset(buffer, '\0', 50);
 		int tryFunc = executeFunction(buffer, string, memory);
-		//printf("%s\n", buffer);
 
 		// Function fail code
 		if (tryFunc) {
@@ -100,9 +99,7 @@ void parseString(char *buffer, struct Tree *tree, struct Memory *memory) {
 
 int findLabel(char *name, struct Memory *memory) {
 	for (int l = 0; l < memory->labelsLength; l++) {
-		//printf("---%s-%s\n", memory->labels[l].name, name);
 		if (!strcmp(name, memory->labels[l].name)) {
-			//printf("---%s-%s\n", memory->labels[l].name, name);
 			return l;
 		}
 	}
@@ -113,14 +110,12 @@ int findLabel(char *name, struct Memory *memory) {
 // Function for validating and setting goto
 int gotoLabel(char *name, int l, struct Memory *memory) {
 	int label = findLabel(name, memory);
-	//printf("---%s-%s-\n", memory->labels[1].name, name);
 
 	if (label == -1) {
 		return label;
 	}
 
 	memory->labels[label].lastUsed = l;
-	//printf("---%s-%d\n", name, l + 1);
 	return memory->labels[label].line;
 }
 
@@ -135,7 +130,7 @@ int testCondition(int *error, char *operator, char *first, char *second, char l,
 	}
 
 	int findColon = -1;
-	for (int c = 0; c < strlen(second); c++) {
+	for (int c = 0; second[c] != '\0'; c++) {
 		if (second[c] == ':') {
 			findColon = c;
 			break;
@@ -162,8 +157,6 @@ int testCondition(int *error, char *operator, char *first, char *second, char l,
 		actualValue[c] = second[c];
 	}
 
-	//printf("%d\n", memory->variablesLength);
-
 	int test = -1;
 	switch (operator[0]) {
 	case EQUAL:
@@ -177,7 +170,6 @@ int testCondition(int *error, char *operator, char *first, char *second, char l,
 	if (test) {
 		*error = -5;
 	} else {
-		//printf("---%d--\n", labelLine);
 		return labelLine - 1;
 	}
 

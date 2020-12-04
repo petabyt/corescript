@@ -5,7 +5,11 @@
 #include "../math/math.h"
 #include "runtime.h"
 
-// A simple function for testing different functions
+enum FuncErr {
+	ERROR = -1
+};
+
+// A simple struct for testing different functions
 struct TestFunction {
 	int add; int sub; int char_; int len;
 };
@@ -57,8 +61,8 @@ int executeFunction(char *result, char *string, struct Memory *memory) {
 			return -3;
 		}
 
-		// Char of larger than string (don't segfault)
-		if (second > strlen(memory->variables[tryVar].value)) {
+		// Test if char of larger than string
+		if (second > (int)strlen(memory->variables[tryVar].value)) {
 			return -4;
 		}
 

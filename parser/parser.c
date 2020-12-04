@@ -8,6 +8,8 @@ struct Command commandInfo(struct Lang *core, char *first) {
 			return core->command[c];
 		}
 	}
+
+	return core->command[0];
 }
 
 // Get int for when string starts (or not starts,

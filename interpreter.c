@@ -14,6 +14,7 @@ enum Runtime {
 	MAX_LINE_LENGTH = 100
 };
 
+// Store command names and expected args
 struct Lang core = {
 	6,
 	{
@@ -75,17 +76,12 @@ int main(int argc, char *argv[]) {
 	createVariable("blank", "", &memory);
 	createVariable("space", " ", &memory);
 
-	// Look at all lines, but real line number is
-	// excluding comments, labels
-	int linesParsed = 0;
-
 	// Test for labels
 	struct Tree tree;
 	for (int l = 0; l < lineCount; l++) {
 		tree = parse(
 			&core,
-			code[l],
-			strlen(code[l])
+			code[l]
 		);
 
 		// Store label if parser detected it
@@ -99,8 +95,7 @@ int main(int argc, char *argv[]) {
 	for (int l = 0; l < lineCount; l++) {
 		tree = parse(
 			&core,
-			code[l],
-			strlen(code[l])
+			code[l]
 		);
 
 		if (tree.ignore == 1) {
