@@ -1,11 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "parser/main.h"
-#include "parser/parser.h"
-#include "math/math.h"
-#include "runtime/runtime.h"
-#include "standard/main.h"
+
+#include "core.h"
 
 // TODO: multiple files
 
@@ -29,14 +26,13 @@ struct Lang core = {
 
 int main(int argc, char *argv[]) {
 	if (argc == 1 || argv[1][0] == '?') {
-		puts("Corescript Interpreter v0.1.1\n");
+		puts("Usage: corescript <file>");
 		return 0;
 	}
 
 	// This pointer is used twice, and is reset for
 	// the second reading
 	FILE *file = fopen(argv[1], "r");
-
 	if (file == NULL) {
 		puts("File reading error.");
 		return -1;
@@ -68,13 +64,13 @@ int main(int argc, char *argv[]) {
 
 	fclose(file);
 
-	struct Memory memory;
-	memory.variablesLength = 0;
-	memory.labelsLength = 0;
+	struct Memory *memory = malloc(sizeof(struct Memory));
+	memory->variablesLength = 0;
+	memory->labelsLength = 0;
 
 	// Default variables
-	createVariable("blank", "", &memory);
-	createVariable("space", " ", &memory);
+	createVariable("blank", "", memory);
+	createVariable("space", " ", memory);
 
 	// Test for labels
 	struct Tree tree;
@@ -86,9 +82,9 @@ int main(int argc, char *argv[]) {
 
 		// Store label if parser detected it
 		if (tree.ignore && tree.ignoreType == ':') {
-			strcpy(memory.labels[memory.labelsLength].name, tree.parts[0].value);
-			memory.labels[memory.labelsLength].line = l;
-			memory.labelsLength++;
+			strcpy(memory->labels[memory->labelsLength].name, tree.parts[0].value);
+			memory->labels[memory->labelsLength].line = l;
+			memory->labelsLength++;
 		}
 	}
 
@@ -104,7 +100,7 @@ int main(int argc, char *argv[]) {
 
 		// Parse command directly from "standard library"
 		l = standard(
-			&memory,
+			memory,
 			&core,
 			&tree,
 			l

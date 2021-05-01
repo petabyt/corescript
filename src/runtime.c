@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include "../parser/main.h"
-#include "../parser/parser.h"
-#include "../math/math.h"
-#include "functions.h"
+
+#include "core.h"
 
 int getVariable(char *name, struct Memory *memory) {
 	for (int v = 0; v < memory->variablesLength; v++) {

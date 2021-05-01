@@ -1,9 +1,6 @@
-#include <stdio.h>
 #include <string.h>
-#include "../parser/main.h"
-#include "../parser/parser.h"
-#include "../math/math.h"
-#include "runtime.h"
+
+#include "core.h"
 
 enum FuncErr {
 	ERROR = -1

@@ -1,6 +1,7 @@
 // I only use strings.h for strcmp. Maybe I can flex and not use it.
 #include <string.h>
-#include "main.h"
+
+#include "core.h"
 
 struct Command commandInfo(struct Lang *core, char *first) {
 	for (int c = 0; c < core->commands; c++) {

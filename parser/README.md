@@ -1,2 +1,0 @@
-# parser
-Corescript Main Parser
