@@ -28,28 +28,23 @@ int handleFirst(struct Lang *core, struct Tree *tree) {
 	return -1;
 }
 
-/*
-Temporary reference as I am too lazy to create an enum right now
-0 - Don't add
-1 - New part and don't append current char
-2 - New part and append current char
-*/
-
 // Corescript parsing algorithm
 struct Tree parse(struct Lang *core, char *command) {
 	struct Tree tree;
 	tree.ignoreType = '\0';
 
-	int commandStarted = 0; // If command started
-	int stringStarted = 0; // If string started
+	int commandStarted = 0;
+	int stringStarted = 0;
 	int startString = -1; // When to start string, -1 for less than 0
-	int addThis = 0; // Int for adding, not adding
+	int addThis = 0;
 	int appendX = 0; // Appending int for strings
 
 	tree.indent = 0;
 	tree.stringsLength = 0;
 	tree.partsLength = 0;
 	for (int c = 0; command[c] != '\0'; c++) {
+		tree.strings[tree.stringsLength].type = 0;
+		
 		// Don't start yet if indented
 		if (commandStarted == 0) {
 			if (command[c] == INDENT_CHAR) {
@@ -113,13 +108,13 @@ struct Tree parse(struct Lang *core, char *command) {
 			}
 		} else {
 			if (command[c] == PART_SPLIT) {
-				addThis = 1;
+				addThis = NEWNOCHAR;
 			}
 		}
 
 		// Append when on last char
-		if (command[c + 1] == '\0' && addThis == 0) {
-			addThis = 2;
+		if (command[c + 1] == '\0' && addThis == DONTADD) {
+			addThis = NEWYESCHAR;
 
 			// Set first part initial value
 			// It is set to string, but will change later if RAW
@@ -127,7 +122,7 @@ struct Tree parse(struct Lang *core, char *command) {
 		}
 
 		// Append char (unless told not to)
-		if (addThis != 1) {
+		if (addThis != NEWNOCHAR) {
 			if (stringStarted) {
 				tree.strings[tree.stringsLength].value[appendX] = command[c];
 			} else {
@@ -162,7 +157,7 @@ struct Tree parse(struct Lang *core, char *command) {
 		}
 
 		// Reset for next char test
-		addThis = 0;
+		addThis = DONTADD;
 	}
 
 	return tree;
@@ -195,24 +190,3 @@ struct Function parseFunction(char *string, int length) {
 
 	return function;
 }
-//
-//struct Lang core = {
-//	5,
-//	{
-//		{"print", 1},
-//		{"var", 3},
-//		{"set", 3},
-//		{"goto", 1},
-//		{"if", 3}
-//	}
-//};
-// int main() {
-//	char test[] = "	if char = [space]:char";
-//	int length = strlen(test);
-// 	struct Tree command = parse(&core, test, length);
-//
-// 	printf("- - %d\n", command.indent);
-//	printf("\"%s\"\n", command.parts[0].value);
-//	printf("\"%s\" - %d\n", command.strings[0].value, command.strings[0].type);
-//}
-//

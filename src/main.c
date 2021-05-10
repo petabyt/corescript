@@ -4,26 +4,53 @@
 
 #include "core.h"
 
-// TODO: multiple files
+void runCorescript(char **code, int lineCount) {
+	struct Memory *memory = malloc(sizeof(struct Memory));
+	memory->variablesLength = 0;
+	memory->labelsLength = 0;
 
-enum Runtime {
-	MAX_STRING_LENGTH = 50,
-	MAX_LINE_LENGTH = 100
-};
+	// Default variables
+	createVariable("blank", "", memory);
+	createVariable("space", " ", memory);
 
-// Store command names and expected args
-struct Lang core = {
-	6,
-	{
-		{"print", 1},
-		{"var", 3},
-		{"set", 3},
-		{"goto", 1},
-		{"if", 3},
-		{"return", 1}
+	// Test for labels
+	struct Tree tree;
+	for (int l = 0; l < lineCount; l++) {
+		tree = parse(
+			&english,
+			code[l]
+		);
+
+		// Store label if parser detected it
+		if (tree.ignore && tree.ignoreType == ':') {
+			strcpy(memory->labels[memory->labelsLength].name, tree.parts[0].value);
+			memory->labels[memory->labelsLength].line = l;
+			memory->labelsLength++;
+		}
 	}
-};
 
+	for (int l = 0; l < lineCount; l++) {
+		tree = parse(
+			&english,
+			code[l]
+		);
+
+		if (tree.ignore) {
+			continue;
+		}
+
+		// Parse command directly from "standard library"
+		l = standard(
+			memory,
+			&english,
+			&tree,
+			l
+		);
+	}
+
+	free(memory);
+}
+ 
 int main(int argc, char *argv[]) {
 	if (argc == 1 || argv[1][0] == '?') {
 		puts("Usage: corescript <file>");
@@ -55,57 +82,18 @@ int main(int argc, char *argv[]) {
 	int line = 0;
 	while (fgets(read, MAX_LINE_LENGTH, file) != NULL) {
 		code[line] = malloc(MAX_LINE_LENGTH * sizeof(char));
-
 		strtok(read, "\n"); // remove trailing \n
 		strcpy(code[line], read);
-
 		line++;
 	}
 
 	fclose(file);
-
-	struct Memory *memory = malloc(sizeof(struct Memory));
-	memory->variablesLength = 0;
-	memory->labelsLength = 0;
-
-	// Default variables
-	createVariable("blank", "", memory);
-	createVariable("space", " ", memory);
-
-	// Test for labels
-	struct Tree tree;
-	for (int l = 0; l < lineCount; l++) {
-		tree = parse(
-			&core,
-			code[l]
-		);
-
-		// Store label if parser detected it
-		if (tree.ignore && tree.ignoreType == ':') {
-			strcpy(memory->labels[memory->labelsLength].name, tree.parts[0].value);
-			memory->labels[memory->labelsLength].line = l;
-			memory->labelsLength++;
-		}
-	}
-
-	for (int l = 0; l < lineCount; l++) {
-		tree = parse(
-			&core,
-			code[l]
-		);
-
-		if (tree.ignore == 1) {
-			continue;
-		}
-
-		// Parse command directly from "standard library"
-		l = standard(
-			memory,
-			&core,
-			&tree,
-			l
-		);
-	}
 	
+	runCorescript(code, lineCount);	
+
+	for (int i = 0; i < line; i++) {
+		free(code[i]);
+	}
+
 	free(code);
 }

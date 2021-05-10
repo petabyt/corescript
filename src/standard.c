@@ -66,7 +66,7 @@ int standard(struct Memory *memory, struct Lang *core, struct Tree *tree, int li
 
 		// Exit if error is -5, which means it is false,
 		// not really an error.
-		if (error == -5) {
+		if (error == FALSE) {
 			return line;
 		}
 

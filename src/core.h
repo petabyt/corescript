@@ -7,6 +7,25 @@
 #define RAW 1
 #define STRING 2
 
+enum Parser {
+	DONTADD = 0, // Don't add
+	NEWNOCHAR = 1, // New part and don't append current char
+	NEWYESCHAR = 2 // New part and append current char
+};
+
+enum ConditionError {
+	BAD_VAR = -1,
+	NO_COLON = -2,
+	BAD_LABEL = -3,
+	INVALID_OPT = -4,
+	FALSE = -5
+};
+
+enum Runtime {
+	MAX_STRING_LENGTH = 128,
+	MAX_LINE_LENGTH = 512
+};
+
 // Parser grammar configuration
 enum Grammar {
 	INDENT_CHAR = '\t',
@@ -24,27 +43,27 @@ enum Grammar {
 // Runtime memory
 struct Memory {
 	struct Variables {
-		char name[50];
-		char value[50];
+		char name[128];
+		char value[MAX_STRING];
 		int length;
-	}variables[20];
+	}variables[50];
 	int variablesLength;
 	struct Labels {
-		char name[50];
+		char name[128];
 		int line;
 		int lastUsed;
-	}labels[10];
+	}labels[50];
 	int labelsLength;
 };
 
 // Corescript AST
 struct Parts {
-	char value[50];
+	char value[MAX_STRING];
 };
 
 struct Strings {
 	int type;
-	char value[50];
+	char value[MAX_STRING];
 };
 
 struct Tree {
@@ -71,6 +90,19 @@ struct Lang {
 		char *first;
 		int start;
 	}command[];
+};
+
+// Store command names and expected args
+static struct Lang english = {
+	6,
+	{
+		{"print", 1},
+		{"var", 3},
+		{"set", 3},
+		{"goto", 1},
+		{"if", 3},
+		{"return", 1}
+	}
 };
 
 int executeFunction(char *result, char *string, struct Memory *memory);

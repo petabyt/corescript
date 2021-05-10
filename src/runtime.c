@@ -65,7 +65,7 @@ int parseIntOrVar(int *error, char *string, int length, struct Memory *memory) {
 int parseRaw(char *buffer, char *string, struct Memory *memory) {
 	int findVar = getVariable(string, memory);
 	if (findVar == -1) {
-		memset(buffer, '\0', 50);
+		memset(buffer, '\0', MAX_STRING);
 		int tryFunc = executeFunction(buffer, string, memory);
 
 		// Function fail code
@@ -82,7 +82,7 @@ int parseRaw(char *buffer, char *string, struct Memory *memory) {
 void parseString(char *buffer, struct Tree *tree, struct Memory *memory) {
 	for (int s = 0; s < tree->stringsLength; s++) {
 		if (tree->strings[s].type == RAW) {
-			char rawBuffer[50];
+			char rawBuffer[MAX_STRING];
 			int tryRaw = parseRaw(rawBuffer, tree->strings[s].value, memory);
 			if (tryRaw == -1) {
 				strcpy(rawBuffer, "[Unknown function or variable]");
@@ -117,13 +117,10 @@ int gotoLabel(char *name, int l, struct Memory *memory) {
 	return memory->labels[label].line;
 }
 
-
-// TODO: Use enum for errors
 int testCondition(int *error, char *operator, char *first, char *second, char l, struct Memory *memory) {
-	//printf("--%s\n", second);
 	int tryVar = getVariable(first, memory);
 	if (tryVar == -1) {
-		*error = -1;
+		*error = BAD_VAR;
 		return 0;
 	}
 
@@ -136,16 +133,15 @@ int testCondition(int *error, char *operator, char *first, char *second, char l,
 	}
 
 	if (findColon == -1) {
-		*error = -2;
+		*error = NO_COLON;
 		return 0;
 	}
 
 	// Point to string after the colon
 	int labelLine = gotoLabel(second + findColon + 1, l, memory);
 
-	// Error: Bad label
 	if (labelLine == -1) {
-		*error = -3;
+		*error = BAD_LABEL;
 		return 0;
 	}
 
@@ -161,12 +157,12 @@ int testCondition(int *error, char *operator, char *first, char *second, char l,
 		test = strcmp(memory->variables[tryVar].value, actualValue);
 		break;
 	default:
-		*error = -4; // Invalid operator
+		*error = INVALID_OPT;
 		return 0;
 	}
 
 	if (test) {
-		*error = -5;
+		*error = FALSE;
 	} else {
 		return labelLine - 1;
 	}
