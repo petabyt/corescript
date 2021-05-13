@@ -2,9 +2,8 @@
 Corescript written in C. Official CLI Program.
 ## Compilation:
 ```
-tcc parser/parser.c runtime/runtime.c runtime/functions.c math/math.c interpreter.c -o corescript
+make
 ```
-Note that GCC and TCC both work.
 ## Usage
 ```
 daniel@pc:~/Documents/CorescriptC$ ./corescript example/fib.core
