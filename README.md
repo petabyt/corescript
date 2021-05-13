@@ -1,5 +1,10 @@
 # corescript
-Corescript written in C. Official CLI Program.
+![header](https://repository-images.githubusercontent.com/271654000/d3249b00-b371-11eb-915d-19c741104392)
+The Corescript programming language, implemented in C99.  
+
+[The Documentation](https://github.com/corescript-lang/docs)  
+[Try it Online](https://corescript-lang.github.io/editor/)  
+
 ## Compilation:
 ```
 make
