@@ -1,3 +1,4 @@
 corescript
 *.out
 core.out
+*.o

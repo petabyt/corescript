@@ -1,3 +1,7 @@
-all:
-	$(CC) src/*.c -o corescript
-	valgrind ./corescript example/test.core
+FILES=$(wildcard src/*.c)
+
+corescript: $(FILES)
+	$(CC) $(FILES) -o corescript
+
+test:
+	./corescript example/test.core
