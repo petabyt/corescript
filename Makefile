@@ -3,5 +3,5 @@ FILES=$(wildcard src/*.c)
 corescript: $(FILES)
 	$(CC) $(FILES) -o corescript
 
-test:
+test: corescript
 	./corescript example/test.core

@@ -5,6 +5,10 @@ The Corescript programming language, implemented in C99.
 [The Documentation](https://github.com/corescript-lang/docs)  
 [Try it Online](https://corescript-lang.github.io/editor/)  
 
+This is the official implementation. The code is very bad,  
+I wrote it when I hardly knew how to implement a parser and
+wasn't very proficient with C.
+
 ## Compilation:
 ```
 make
