@@ -1,0 +1,46 @@
+# This prints some random slashes and
+# backslashes as a cube. 
+# Not actually a maze though :(
+
+var height = 10
+var width = 15
+
+# Runtime variables
+var x = 0
+var y = 0
+
+# Loop for X
+:countX
+set y = 0
+if x = (height):kill
+
+# Loop for Y
+:countY
+if y = (width):nextX
+goto randomChar
+set y = (add y 1)
+goto countY
+
+# End loop X and print
+:nextX
+print <br>
+set x = (add x 1)
+goto countX
+
+
+# To print a random slash or backslash
+:randomChar
+var random = (rand 1 2)
+if random = 1:slash
+if random = 2:backslash
+return randomChar
+
+:slash
+print /
+return slash
+
+:backslash
+print \
+return backslash
+
+:kill

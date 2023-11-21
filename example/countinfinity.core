@@ -1,0 +1,5 @@
+var i = 0
+:top
+print (i)
+set i = (add i 1)
+goto top

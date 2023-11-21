@@ -1,0 +1,41 @@
+var counter = 1
+var sin = (blank)
+
+:topWave
+
+# sin(counter) * 4 + 6
+set sin = (sin counter)
+set sin = (mult sin 4)
+set sin = (add sin 6)
+
+# "Round" by taking first char
+set sin = (sin[0])
+
+# Print the result sine
+var to = (sin)
+goto printDash
+
+print #
+
+# Print remaining sine
+var to = (sub 20 sin)
+goto printDash
+
+# Reset
+set sin = (blank)
+set counter = (add counter 0.7)
+
+print <br>
+goto topWave
+
+
+# Print "to" amount of dashes
+:printDash
+var i = 0
+:top
+if i = (to):stopLoop
+set i = (add i 1)
+print -
+goto top
+:stopLoop
+return printDash

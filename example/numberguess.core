@@ -1,0 +1,18 @@
+var random = (rand 1 100)
+
+:top
+input guess = Guess my number 1-100:
+if guess > (random):toohigh
+if guess < (random):toolow
+print Correct!
+goto kill
+
+:toohigh
+print Guess lower.
+goto top
+
+:toolow
+print Guess higher.
+goto top
+
+:kill
