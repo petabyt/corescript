@@ -1,0 +1,37 @@
+# ASCI_ADVENTURE
+# Created and abandoned on Oct 2017
+# Optimized for modern Corescript on April 13 2020
+
+print ASCI ADVENTURE
+print Made By Pufflegamerz | Based off of Crispin
+print Programed in Corescript
+print On an adventure, you come across a village.
+input woods = What do you do? 1 - Enter Village 2 - Leave
+if woods = 1:entervillage
+stop
+print You left the village.
+print The end.
+stop
+:entervillage
+print You entered the village. The village seems to be abandon.
+print While you were exploring the village, you hear an echo!
+input insidevillage = What do you do? 1 - investigate 2 - Run like heck
+if insidevillage = 1:investigate
+print You ran for your life. 
+print You get back in your truck and head back to civilization.
+print The End
+stop
+:investigate
+print You decide to investigate the voice. 
+print The echos lead you to an old church.
+print As you enter the church, you catch glimpse of an old man.
+input oldman = What do you do? 1 - Talk to old man 2 - Leave church.
+if oldman = 1:talk
+print You left the church.
+stop
+:talk
+print You walk up to the old man.
+print The old man said, "Eh? Who's there?" 
+print "Do you live here?" You said.
+print The old man shrugged and walked inside a room.
+print The end (unfinished since Oct 2017)

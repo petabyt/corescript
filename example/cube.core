@@ -1,0 +1,30 @@
+var height = 10
+var width = 15
+
+# Runtime variables
+var x = 0
+var y = 0
+var temp = [blank]
+
+print <br>
+
+# Loop for X
+:countX
+set y = 0
+if x = [height]:kill
+
+# Loop for Y
+:countY
+if y = [width]:nextX
+set temp = [temp]#
+set y = [add y 1]
+goto countY
+
+# End loop X and print
+:nextX
+print [temp]<br>
+set temp = [blank]
+set x = [add x 1]
+goto countX
+
+:kill

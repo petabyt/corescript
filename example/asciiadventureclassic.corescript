@@ -1,0 +1,72 @@
+// RUN CODE ON https://corescript-lang.github.io/editor-legacy/archive/editor_v_10.html
+// Go to settings>enable advanced styles
+// And run this code (COPY `styles=on` to `goto 61` only)
+
+styles=on
+text ASCII Adventure=heading
+button [Start]=14
+button [Credits]=6
+stop
+cls
+print Made By Pufflegamerz | Based off of Crispin
+print Programed in Corescript
+button [Back]=11
+stop
+cls
+goto 2
+stop
+msg On an adventure, you come across a village.
+input woods=What do you do? 1 - Enter Village 2 - Leave
+if woods=1 27
+if woods=2 21
+not woods=1 24
+not woods=2 24
+stop
+msg You left the village.
+goto 20
+stop
+msg Please anwser 1 or 2
+goto 15
+stop
+msg You entered the village. The village seems to be abandon.
+msg While you were exploring the village, you hear an echo!
+input insidevillage=What do you do? 1 - investigate 2 - Run like heck
+if insidevillage=1 42
+if insidevillage=2 38
+not insidevillage=1 35
+not insidevillage=2 35
+stop
+Please anwser 1 or 2
+goto 29
+stop
+msg You ran for your life. 
+msg You get back in your truck and head back to civilization.
+msg The End
+stop
+msg You decide to investigate the voice. 
+msg The echos lead you to an old church.
+msg As you enter the church, you catch glimpse of an old man.
+input oldman=What do you do? 1 - Talk to old man 2 - Leave church.
+if oldman=1 57
+if oldman=2 51
+not oldman=1 54
+not oldman=2 54
+stop
+msg You left the church.
+goto 38
+stop
+msg Please anwser 1 or 2
+goto 45
+stop
+msg You walk up to the old man.
+msg The old man said, "Eh? Who's there?" 
+msg "Do you live here?" You said.
+msg The old man shrugged and walked inside a room.
+//input outchurch=What do you do? 1 - Follow Him 2 - Leave church
+//if outchurch=1
+//if outchurch=2
+//not outchurch=1
+//not outchurch=2
+//stop
+//msg Please anwser 1 or 2
+//goto 61

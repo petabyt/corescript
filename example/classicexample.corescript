@@ -1,0 +1,5 @@
+input name = What's your name?
+:top
+print Hello, (name)!
+print Hello, World!
+goto top
